@@ -32,6 +32,6 @@ Para a implementação do banco de dados, foram considerados os seguintes sistem
 
 - [x] Criar diagrama ER para representar as entidades e relacionamentos do sistema.
 - [x] Mapear o diagrama ER para o modelo relacional, identificando tabelas, atributos e chaves.
-- [ ] Implementar o esquema do banco de dados em pelo menos um dos SGBDs listados.
+- [x] Implementar o esquema do banco de dados em pelo menos um dos SGBDs listados.
 - [ ] Desenvolver consultas SQL para consulta, inserção, deleção e atualização de dados.
 - [ ] Testar e validar o funcionamento do banco de dados em diferentes cenários.
