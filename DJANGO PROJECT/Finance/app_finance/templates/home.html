@@ -1,3 +1,39 @@
-{% include "base.html" %}
+{% extends "base.html" %}
 
-teste
+{% block main %}
+
+    {% if selected_account %}
+        <div class="d-flex flex-row-reverse">
+            <button type="button" class="btn btn-secondary btn-sm">Nova transação</button>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-striped table-hover table-sm">
+                <thead>
+                    <tr>
+                        <th scope="col">Data</th>
+                        <th scope="col">Transação</th>
+                        <th scope="col">Categoria</th>
+                        <th scope="col">Valor (R$)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% if transacions %}
+                    {% for transaction in transacions %}
+                        <tr>
+                            <td>{{transaction.date}}</td>
+                            <td>{{transaction.name}}</td>
+                            <td>{{transaction.category}}</td>
+                            <td>{{transaction.value}}</td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr class="table-info">
+                        <td colspan="4" class="text-center">Nenhuma transação cadastrada nesta conta...</td>
+                    </tr>
+                {% endif %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+{% endblock %}

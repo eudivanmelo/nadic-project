@@ -16,20 +16,34 @@
                 <span class="fs-4">FINANCE</span>
             </a>
             <div class="d-flex text-end m-1">
-                <span class="mx-3">R$0,00</span>
+                {% if selected_account %}
+                    <span class="mx-3">R${{selected_account.balance}}</span>
+                {% endif %}
                 <div class="dropdown mx-2">
                     <a href="#" class="d-block link-secondary text-decoration-none dropdown-toggle" id="dropdownAccount"
                         data-bs-toggle="dropdown" aria-expanded="false">
-                        Poupança
+                        {% if selected_account %}
+                            {{selected_account.name}}
+                        {% else %}
+                            Sem conta...
+                        {% endif %}
                     </a>
                     <ul class="dropdown-menu text-small" aria-labelledby="dropdownAccount">
-                        <li><a class="dropdown-item active" href="#">Poupança</a></li>
-                        <li><a class="dropdown-item" href="#">Corrente</a></li>
-                        <!--<li><span class="dropdown-item-text">Sem contas...</span></li>-->
+                        {% if accounts %}
+                            {% for account in accounts %}
+                                {% if account == selected_account %}
+                                    <li><a class="dropdown-item active" href="{% url 'home' %}?account={{ account.account_id }}">{{account.name}}</a></li>  
+                                {% else %}
+                                    <li><a class="dropdown-item" href="{% url 'home' %}?account={{ account.account_id }}">{{account.name}}</a></li>  
+                                {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            <li><span class="dropdown-item-text">Sem contas...</span></li>
+                        {% endif %}
                         <li>
                             <hr class="dropdown-divider">
                         </li>
-                        <li><a class="dropdown-item" href="#">Adicionar conta</a></li>
+                        <li><a class="dropdown-item" href="{% url 'newaccount' %}">Adicionar conta</a></li>
                     </ul>
                 </div>
                 <div class="dropdown mx-2">
@@ -45,53 +59,14 @@
         </header>
 
         <main>
-            <div class="d-flex flex-row-reverse">
-                <button type="button" class="btn btn-secondary btn-sm">Nova transação</button>
-            </div>
-            <div class="table-responsive">
-                <table class="table table-striped table-sm">
-                    <thead>
-                        <tr>
-                            <th scope="col">Data</th>
-                            <th scope="col">Transação</th>
-                            <th scope="col">Categoria</th>
-                            <th scope="col">Valor (R$)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>00/00/0000</td>
-                            <td>random</td>
-                            <td>data</td>
-                            <td>-70,00</td>
-                        </tr>
-                        <tr>
-                            <td>00/00/0000</td>
-                            <td>random</td>
-                            <td>data</td>
-                            <td>-70,00</td>
-                        </tr>
-                        <tr>
-                            <td>00/00/0000</td>
-                            <td>random</td>
-                            <td>data</td>
-                            <td>-70,00</td>
-                        </tr>
-                        <tr>
-                            <td>00/00/0000</td>
-                            <td>random</td>
-                            <td>data</td>
-                            <td>-70,00</td>
-                        </tr>
-                        <tr>
-                            <td>00/00/0000</td>
-                            <td>random</td>
-                            <td>data</td>
-                            <td>-70,00</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+            {% for message in messages %}
+                <div class="alert alert-info" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+
+            {% block main %}
+            {% endblock %}
         </main>  
     </div>
 

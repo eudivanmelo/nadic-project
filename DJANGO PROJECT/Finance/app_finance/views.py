@@ -2,12 +2,34 @@ from django.conf import settings
 from django.shortcuts import redirect, render
 from django.http import HttpRequest
 from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
+from .models import Account, Category, Transaction
+from .forms import AccountForm
 
 def home(request: HttpRequest):
     if not request.user.is_authenticated:
         return redirect(f"{settings.LOGIN_URL}")
     
-    return render(request, 'home.html', context={'user': request.user})
+    context = {'user': request.user}
+    
+    accounts = Account.objects.filter(user=request.user)
+    if not accounts:
+        messages.info(request, 'Você não possui nenhuma conta cadastrada!')
+    else:
+        context.update({'accounts': accounts})
+        selected_account_id = request.GET.get('account')
+        
+        if selected_account_id:
+            selected_account = accounts.get(account_id=selected_account_id)
+        else:
+            selected_account = accounts.first()
+            
+        context.update({'selected_account': selected_account})
+        
+        transactions = Transaction.objects.filter(account=selected_account)
+        context.update({'transactions': transactions})
+    
+    return render(request, 'home.html', context=context)
 
 def login_view(request: HttpRequest):
     """
@@ -48,3 +70,16 @@ def logout_view(request: HttpRequest):
     logout(request)
     # Redireciona o usuário para a página de login após o logout
     return redirect('login')
+
+def newaccount_view(request: HttpRequest):
+    if request.method == 'POST':
+        form = AccountForm(request.POST)
+        if form.is_valid():
+            form.instance.user = request.user
+            form.save()
+            messages.info(request, 'Conta criada com sucesso!')
+            return redirect('home')  # Redireciona para alguma view após o sucesso do formulário
+    else:
+        form = AccountForm()
+        
+    return render(request, 'newaccount.html', {'form': form})
