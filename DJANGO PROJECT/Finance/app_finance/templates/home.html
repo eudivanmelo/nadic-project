@@ -4,7 +4,7 @@
 
     {% if selected_account %}
         <div class="d-flex flex-row-reverse">
-            <button type="button" class="btn btn-secondary btn-sm">Nova transação</button>
+            <a class="btn btn-secondary btn-sm" href="{% url 'addtransaction' %}?account={{ selected_account.account_id }}">Nova transação</a>
         </div>
 
         <div class="table-responsive">
@@ -18,9 +18,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                {% if transacions %}
-                    {% for transaction in transacions %}
-                        <tr>
+                {% if transactions %}
+                    {% for transaction in transactions %}
+                        <tr class="table-{% if transaction.category.type == "Expense" %}danger{% else %}success{% endif %}">
                             <td>{{transaction.date}}</td>
                             <td>{{transaction.name}}</td>
                             <td>{{transaction.category}}</td>
@@ -29,7 +29,9 @@
                     {% endfor %}
                 {% else %}
                     <tr class="table-info">
-                        <td colspan="4" class="text-center">Nenhuma transação cadastrada nesta conta...</td>
+                        <td colspan="4" class="text-center">
+                            Nenhuma transação cadastrada nesta conta...
+                        </td>
                     </tr>
                 {% endif %}
                 </tbody>

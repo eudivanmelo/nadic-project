@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block main %}
+    <div class="container col-6">
+        <h2>Adicionar uma nova transação</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group mb-3">
+                <label class="form-label" for="select_account">Conta selecionada:</label>
+                <select class="form-select" id="select_account" name="account">
+                    {% for account in accounts %}
+                        {% if account == selected_account %}
+                            <option selected value="{{account.account_id}}">{{account.name}}</option>
+                        {% else %}
+                            <option value="{{account.account_id}}">{{account.name}}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group mb-3">
+                <label class="form-label" for="name">Nome:</label>
+                <input type="text" placeholder="Compras do mês" class="form-control" id="name" name="name">
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="date" class="form-label">Data:</label>
+                <input type="date" class="form-control" id="date" name="date">
+            </div>
+
+            <div class="form-group mb-3">
+                <label class="form-label" for="value">Valor:</label>
+                <input type="number" step="0.01" min="0.00" placeholder="0.00" class="form-control" id="value" name="value">
+            </div>
+
+            <div class="form-group mb-3">
+                <label class="form-label" for="category">Categoria:</label>
+                    <div class="input-group">
+                        <select class="form-select" id="select_account" name="category">
+                            <option selected>Selecione uma categoria</option>
+                            {% if categorys %}
+                                {% for category in categorys %}
+                                    <option value={{category.category_id}}>{{category.name}}</option>
+                                {% endfor %}
+                            {% endif %}
+                        </select>
+                        <button class="btn btn-outline-secondary" type="button" data-bs-toggle="modal" data-bs-target="#newcategory_modal">Nova categoria</button>
+                    </div>            
+                </div>
+            </br>
+
+            <button type="submit" class="btn btn-dark col-12">Adicionar</button>
+        </form>                                 
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="newcategory_modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="newcategory_modal_label">Nova categoria</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <form method="post">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="form-group mb-3">
+                        <label class="form-label" for="name">Nome:</label>
+                        <input type="text" placeholder="Alimentação" class="form-control" id="name" name="name">
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <label class="form-label" for="select_account">Tipo da categoria:</label>
+                        <select class="form-select" id="select_account" name="type">
+                            <option value="Expense">Despesa</option>
+                            <option value="Revenue">Receita</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-dark">Adicionar Categoria</button>
+                </div>
+            </form>
+        </div>
+        </div>
+    </div>
+{% endblock main %}
